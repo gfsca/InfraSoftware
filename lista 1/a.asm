@@ -17,24 +17,76 @@ start:
 			  ;push em al pode ajudar a simplificar a operação (push1 -> primeira letra push2 -> segunda letra)
 			  
 	cmp al, "r"
+	je red
 	cmp al, "g"
+	je green
 	cmp al, "b"
+	je blue
 	cmp al, "c"
+	je cyan
 	cmp al, "y"
+	je yellow
 	cmp al, "m"
+	je magenta
 
+
+	red:
+	mov bh, 4
+	jmp nextKey
+	green:
+	mov bh, 2
+	jmp nextKey
+	blue:
+	mov bh, 1
+	jmp nextKey
+	cyan:
+	mov bh, 3
+	jmp nextKey
+	yellow:
+	mov bh, 14
+	jmp nextKey
+	magenta:
+	mov bh, 5
+	jmp nextKey
+
+
+	nextKey:
 	mov ah, 0 ;ler um caractere
  	int 16h   ;caractere armazenado em al
+ 	
+ 	mov cx, 10
+    mov dx, 10
 
  	cmp al, "t"
+ 	je triangle
  	cmp al, "q"
+ 	je square
  	cmp al, "T"
+ 	je trapeze
+ 
+ 	triangle:
+	mov ah, 0ch	;imprime um pixel na tela 
+    mov al, 0ah
+    int 10h 
+    jmp done
 
-    mov ah, 0ch	;imprime um pixel na tela 
-    mov bh, 0 ;empilhar o que tiver em cx
+ 	square:
+ 	mov ah, 0ch	;imprime um pixel na tela
+ 	inc cx
+ 	inc dx 
     mov al, 0ah
     int 10h
+    cmp cx, 50
+    jb square
+    jmp done
 
+ 	trapeze:
+ 	mov ah, 0ch	;imprime um pixel na tela 
+    mov al, 0ah
+    int 10h
+    jmp done
+    
+    done:
     jmp $       ;$ = linha atual
  
 times 510 - ($ - $$) db 0

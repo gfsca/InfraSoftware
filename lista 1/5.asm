@@ -1,9 +1,9 @@
 org 0x7c00        ;endereço de memória em que o programa será carregado
 jmp 0x0000:start  ;far jump - seta cs para 0
 
-fizz db 
-buzz db 
-fizzbuzz db
+fizz db 'Fizz'
+buzz db 'Buzz'
+fizzbuzz db 'FizzBuzz'
 
 start:
     xor ax, ax  ;zera ax, xor é mais rápido que mov
@@ -20,6 +20,7 @@ start:
  	int 10h 
     mov dh, 0
     mov cx, 100
+    
     counter:
     inc dh
     mov ax, dh
@@ -30,7 +31,10 @@ start:
     div 5
     cmp ah, 0
     je printBuzz
-    ;printa o numero normal
+    mov al, dh
+    mov ah, 0eh
+    int 10h
+
     volta:
     loop counter
 
@@ -41,16 +45,23 @@ start:
     div 5
     cmp ah, 0
     je printFizzBuzz
-    ;printa fizz
-    jmp volta
+    mov si, fizz
+    lodsb
+    cmp al, 0 
+    je volta
     
     printBuzz:
-    
-    jmp volta
+    mov si, buzz
+    lodsb
+    cmp al,0
+    je volta
    
     printFizzBuzz:
-    
-    jmp volta
+    mov si, fizzbuzz
+    lodsb
+    cmp al, 0
+    je volta
+
 
     done:
     jmp $       ;$ = linha atual
